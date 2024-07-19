@@ -184,7 +184,28 @@ export async function favourite(imgId) {
  *    If that isn't in its own function, maybe it should be so you don't have to
  *    repeat yourself in this section.
  */
-
+async function getFavourites(){
+  try {
+    const response = await axios.get(
+      "https://api.thecatapi.com/v1/favourites",
+      { headers }
+    );
+    const favoriteImages = response.data;
+    console.log("Favorite images:", favoriteImages);
+    carousel.clear();
+    favoriteImages.forEach((image) => {
+      const carouselItem = document.createElement("div");
+      carouselItem.classList.add("carousel-item");
+      const img = document.createElement("img");
+      img.src = image.image.url;
+      img.alt = image.image. breeds[0].name;
+      carouselItem.appendChild(img);
+      Carousel.addItem(carouselItem);
+});
+  } catch (error) {
+    console.error("Error loading favorites:", error);
+  }
+}
 /**
  * 10. Test your site, thoroughly!
  * - What happens when you try to load the Malayan breed?
