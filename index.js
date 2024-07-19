@@ -206,6 +206,11 @@ async function getFavourites(){
     console.error("Error loading favorites:", error);
   }
 }
+
+getFavouritesBtn.addEventListener("click", getFavourites);
+
+initialLoad(); 
+
 /**
  * 10. Test your site, thoroughly!
  * - What happens when you try to load the Malayan breed?
