@@ -163,7 +163,16 @@ axios.defaults.onDownloadProgress = updateProgress;
  * - You can call this function by clicking on the heart at the top right of any image.
  */
 export async function favourite(imgId) {
-  // your code here
+  try{
+    const response = await axios.post(
+      "https://api.thecatapi.com/v1/favourites", 
+      {image_id: imgId}, 
+      {headers}
+    );
+    console.log("Image favorited:",response.data);
+  } catch (error) {
+    console.error("Error favoriting image:",error);
+  }
 }
 
 /**
