@@ -38,7 +38,7 @@ async function initialLoad() {
       console.error('Error fetching breeds:', error);
   }
 }
-
+ 
 initialLoad();
 /**
  * 2. Create an event handler for breedSelect that does the following:
@@ -54,7 +54,37 @@ initialLoad();
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+async function loadBreedInfo(breedId) {
+  try {
+      const response = await axios.get('/images/search?breed_ids=${breedId}&limit=10');
+      const breedInfo = response.data;
 
+      const carousel = document.getElementById('carousel');
+      const infoDump = document.getElementById('infoDump');
+      carousel.innerHTML = '';
+      infoDump.innerHTML = '';
+
+      breedInfo.forEach(info => {
+          const imgElement = document.createElement('img');
+          imgElement.src = info.url;
+          carousel.appendChild(imgElement);
+
+          const infoSection = document.createElement('div');
+          infoSection.innerHTML = `
+              <h3>${info.breeds[0].name}</h3>
+              <p>${info.breeds[0].description}</p>
+          `;
+          infoDump.appendChild(infoSection);
+      });
+  } catch (error) {
+      console.error('Error fetching breed info:', error);
+  }
+}
+
+breedSelect.addEventListener('change', (event) => {
+  const breedId = event.target.value;
+  loadBreedInfo(breedId);
+});
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
  */
