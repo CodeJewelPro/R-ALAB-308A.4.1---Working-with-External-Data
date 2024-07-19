@@ -88,6 +88,7 @@ breedSelect.addEventListener('change', (event) => {
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
  */
+
 /**
  * 4. Change all of your fetch() functions to axios!
  * - axios has already been imported for you within index.js.
@@ -97,12 +98,30 @@ breedSelect.addEventListener('change', (event) => {
  *   by setting a default header with your API key so that you do not have to
  *   send it manually with all of your requests! You can also set a default base URL!
  */
+
 /**
  * 5. Add axios interceptors to log the time between request and response to the console.
  * - Hint: you already have access to code that does this!
  * - Add a console.log statement to indicate when requests begin.
  * - As an added challenge, try to do this on your own without referencing the lesson material.
  */
+axios.interceptors.request.use(request => {
+  console.log('Starting Request', request);
+  request.metadata = { startTime: new Date() };
+  document.body.style.cursor = 'progress';
+  return request;
+});
+
+axios.interceptors.response.use(response => {
+  response.config.metadata.endTime = new Date();
+  const duration = response.config.metadata.endTime - response.config.metadata.startTime;
+  console.log('Request Duration:', duration, 'ms');
+  document.body.style.cursor = 'default';
+  return response;
+}, error => {
+  document.body.style.cursor = 'default';
+  return Promise.reject(error);
+});
 
 /**
  * 6. Next, we'll create a progress bar to indicate the request is in progress.
@@ -119,6 +138,13 @@ breedSelect.addEventListener('change', (event) => {
  *   once or twice per request to this API. This is still a concept worth familiarizing yourself
  *   with for future projects.
  */
+function updateProgress(progressEvent) {
+  const progressBar = document.getElementById('progressBar');
+  const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+  progressBar.style.width = `${percentCompleted}%`;
+}
+
+axios.defaults.onDownloadProgress = updateProgress;
 
 /**
  * 7. As a final element of progress indication, add the following to your axios interceptors:
